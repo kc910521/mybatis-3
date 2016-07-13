@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.mybatis</groupId>
     <artifactId>mybatis-parent</artifactId>
-    <version>27</version>
+    <version>28-SNAPSHOT</version>
     <relativePath />
   </parent>
 
@@ -131,6 +131,9 @@
   </distributionManagement>
 
   <properties>
+    <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
+    <maven.compiler.testSource>1.8</maven.compiler.testSource>
+    <maven.compiler.testCompilerArgument>-parameters</maven.compiler.testCompilerArgument>
     <clirr.comparisonVersion>3.3.0</clirr.comparisonVersion>
     <findbugs.onlyAnalyze>org.apache.ibatis.*</findbugs.onlyAnalyze>
     <osgi.export>org.apache.ibatis.*;version=${project.version};-noimport:=true</osgi.export>
@@ -248,8 +251,16 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <testCompilerArgument>${maven.compiler.testCompilerArgument}</testCompilerArgument>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <excludedGroups>${maven.surefire.excludeGroups}</excludedGroups>
           <argLine>${argLine} -Xmx1024m</argLine>
           <systemProperties>
             <property>
@@ -344,4 +355,59 @@
     </testResources>
   </build>
 
+  <profiles>
+    <profile>
+      <id>java16</id>
+      <activation>
+        <jdk>1.6</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.testTarget>1.6</maven.compiler.testTarget>
+        <maven.compiler.testSource>1.6</maven.compiler.testSource>
+        <maven.compiler.testCompilerArgument></maven.compiler.testCompilerArgument>
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/usesjava7/**/*.java</testExclude>
+                  <testExclude>**/usesjava8/**/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>java17</id>
+      <activation>
+        <jdk>1.7</jdk>
+      </activation>
+      <properties>
+        <maven.compiler.testTarget>1.7</maven.compiler.testTarget>
+        <maven.compiler.testSource>1.7</maven.compiler.testSource>
+        <maven.compiler.testCompilerArgument></maven.compiler.testCompilerArgument>
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                <testExcludes>
+                  <testExclude>**/usesjava8/**/*.java</testExclude>
+                </testExcludes>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
 </project>
