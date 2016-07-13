@@ -81,7 +81,7 @@ public final class OgnlCache {
    * now you can set all of them to null before Exception happening
    * 1 of USAGE :
    *        <if test="id != null or id != '' or name==null or sexual != null ">
-        		AND us.id = #{id}may
+        		AND us.id = #{id}
         	<\/if>
    * in that case ,'id' and 'sexual' may be setting to null before executing by OGNL
    * if that not exist in 'parameterType' 
